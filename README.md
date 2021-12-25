@@ -1,0 +1,7 @@
+# BankTransactionApp
+
+## Package
+```
+./gradlew build
+```
+
