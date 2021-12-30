@@ -1,7 +1,8 @@
 package com.adlugosz.service
 
 import com.adlugosz.dao.AccountsDao
-import com.adlugosz.domain.Account
+import com.github.michaelbull.result.Err
+import com.github.michaelbull.result.Ok
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
@@ -17,26 +18,29 @@ internal class AccountsServiceTest {
 
     private val holder = "holder"
 
+    private val accountId = 1L
+
     @Test
     fun `should create new account successfully and return OK result`() {
         //given
-        whenever(accountsDao.createAccount(any(), any())).thenReturn(1L)
+        whenever(accountsDao.createAccount(any(), any())).thenReturn(accountId)
         //when
         val result = objectUnderTest.createAccount(holder)
         //then
-        verify(accountsDao.createAccount(any(), any()))
-        assert(result.isSuccess)
+        verify(accountsDao).createAccount(any(), any())
+        assertEquals(Ok(accountId), result)
     }
 
     @Test
     fun `should fail to create new account and return failure when error is thrown from DAO object`() {
         //given
-        whenever(accountsDao.createAccount(any(), any())).thenThrow(RuntimeException())
+        val expectedException = RuntimeException()
+        whenever(accountsDao.createAccount(any(), any())).thenThrow(expectedException)
         //when
         val result = objectUnderTest.createAccount(holder)
         //then
-        verify(accountsDao.createAccount(any(), any()))
-        assert(result.isFailure)
+        verify(accountsDao).createAccount(any(), any())
+        assertEquals(Err(expectedException), result)
     }
 //
 //    @Test
