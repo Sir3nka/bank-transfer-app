@@ -9,6 +9,12 @@ class AccountsService(private val accountsDao: AccountsDao) {
         accountsDao.createAccount(holder, initialBalance)
     }
 
+    fun transferFunds(from: Long, to: Long) = runCatching {
+        accountsDao.runInTransaction {
+            accountsDao.createAccount("test", 0, it)
+        }
+    }
+
     fun getAllAcounts(): List<Account> {
         TODO("Not yet implemented")
     }

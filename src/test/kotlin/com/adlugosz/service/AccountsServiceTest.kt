@@ -42,16 +42,29 @@ internal class AccountsServiceTest {
         verify(accountsDao).createAccount(any(), any())
         assertEquals(Err(expectedException), result)
     }
-//
-//    @Test
-//    fun `should fetch list of existing accounts and their balance`() {
-//        //given
-//        val account = Account()
-//        val listOfAccounts = listOf(account.copy(), account.copy(), account.copy())
-//        whenever(accountsDao.findAll()).thenReturn()
-//        //when
-//        val result = objectUnderTest.getAllAcounts()
-//        //then
-//        assertEquals(result, listOfAccounts)
-//    }
+
+    @Test
+    fun `should transfer funds from one account to another`() {
+        //given
+        val from = 1L
+        val to = 2L
+        val cash = 100
+        //when
+        val result = objectUnderTest.transferFunds(from, to)
+        //then
+        assertEquals(Ok(Unit), result)
+    }
+
+    @Test
+    fun `should not transfer funds from one account to another where not enough funds`() {
+        //given
+        val from = 1L
+        val to = 2L
+        val cash = 100
+        val expectedException = RuntimeException()
+        //when
+        val result = objectUnderTest.transferFunds(from, to)
+        //then
+        assertEquals(Err(expectedException), result)
+    }
 }
