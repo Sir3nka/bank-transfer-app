@@ -9,6 +9,7 @@ import org.http4k.core.then
 import org.http4k.filter.DebuggingFilters.PrintRequest
 import org.http4k.server.Jetty
 import org.http4k.server.asServer
+import kotlin.system.measureTimeMillis
 
 val createAccount = """CREATE TABLE IF NOT EXISTS `Account` (
   `id`         INTEGER  PRIMARY KEY AUTO_INCREMENT,
@@ -19,17 +20,19 @@ val createAccount = """CREATE TABLE IF NOT EXISTS `Account` (
 """.trimIndent()
 
 fun main() {
-    val dataSource = DbConnFactory.getDataSource()
-    dataSource.connection.use {
-        it.prepareStatement(createAccount).execute()
-    }
-    val defaultAccountsDao = DefaultAccountsDao(dataSource)
-    val accountsService = AccountsService(defaultAccountsDao)
-    val accountsRoute = Accounts(accountsService).accountsRoute()
-    val printingApp: HttpHandler = PrintRequest().then(accountsRoute)
-    accountsService.createAccount("test")
+    measureTimeMillis {
+        val dataSource = DbConnFactory.getDataSource()
+        dataSource.connection.use {
+            it.prepareStatement(createAccount).execute()
+        }
+        val defaultAccountsDao = DefaultAccountsDao(dataSource)
+        val accountsService = AccountsService(defaultAccountsDao)
+        val accountsRoute = Accounts(accountsService).accountsRoute()
+        val printingApp: HttpHandler = PrintRequest().then(accountsRoute)
+        accountsService.createAccount("test")
 
-    val server = printingApp.asServer(Jetty(9000)).start()
+        val server = printingApp.asServer(Jetty(9000)).start()
 
-    println("Server started on " + server.port())
+        println("Server started on " + server.port())
+    }.let { println("Start up took $it ms") }
 }
