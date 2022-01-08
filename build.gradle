@@ -36,11 +36,11 @@ dependencies {
     implementation "org.http4k:http4k-format-jackson:${http4kVersion}"
     implementation "org.http4k:http4k-server-jetty:${http4kVersion}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}"
-    implementation 'com.zaxxer:HikariCP:2.3.2'
+    implementation 'com.zaxxer:HikariCP:5.0.0'
     implementation group: 'com.h2database', name: 'h2', version: '1.3.148'
     implementation("com.michael-bull.kotlin-result:kotlin-result:1.1.13")
     testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
     testImplementation "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
-    testImplementation 'org.mockito.kotlin:mockito-kotlin:3.2.0'
-    testImplementation 'org.mockito:mockito-inline:2.7.21' // mocking final classes
+    testImplementation 'org.mockito.kotlin:mockito-kotlin:4.0.0'
+    testImplementation 'org.mockito:mockito-inline:4.2.0' // mocking final classes
 }

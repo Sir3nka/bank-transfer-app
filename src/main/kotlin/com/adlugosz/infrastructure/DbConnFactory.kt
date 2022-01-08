@@ -2,6 +2,7 @@ package com.adlugosz.infrastructure
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import javax.sql.DataSource
 
 object DbConnFactory {
     private val configuration by lazy { HikariConfig() }
@@ -21,5 +22,5 @@ object DbConnFactory {
         return HikariDataSource(configuration)
     }
 
-    fun getConnection() = dataSource.connection
+    fun getDataSource(): DataSource = dataSource
 }

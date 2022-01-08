@@ -1,33 +1,36 @@
 package com.adlugosz.service
 
 import com.adlugosz.dao.AccountsDao
+import com.adlugosz.dao.DefaultAccountsDao
 import com.github.michaelbull.result.Err
 import com.github.michaelbull.result.Ok
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.any
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
+import org.mockito.kotlin.*
 import java.lang.RuntimeException
+import javax.sql.DataSource
 
 internal class AccountsServiceTest {
-    private val accountsDao: AccountsDao = mock()
-
+    private val dataSource: DataSource = mock()
+    private val accountsDao: AccountsDao = spy(DefaultAccountsDao(dataSource))
     private val objectUnderTest = AccountsService(accountsDao)
-
     private val holder = "holder"
-
     private val accountId = 1L
+
+    @BeforeEach
+    fun init() {
+        whenever(dataSource.connection).thenReturn(mock())
+    }
 
     @Test
     fun `should create new account successfully and return OK result`() {
         //given
-        whenever(accountsDao.createAccount(any(), any())).thenReturn(accountId)
+        doReturn(accountId).whenever(accountsDao).createAccount(any(), any(), any())
         //when
         val result = objectUnderTest.createAccount(holder)
         //then
-        verify(accountsDao).createAccount(any(), any())
+        verify(accountsDao).createAccount(any(), any(), any())
         assertEquals(Ok(accountId), result)
     }
 
@@ -35,11 +38,11 @@ internal class AccountsServiceTest {
     fun `should fail to create new account and return failure when error is thrown from DAO object`() {
         //given
         val expectedException = RuntimeException()
-        whenever(accountsDao.createAccount(any(), any())).thenThrow(expectedException)
+        doThrow(expectedException).whenever(accountsDao).createAccount(any(), any(), any())
         //when
         val result = objectUnderTest.createAccount(holder)
         //then
-        verify(accountsDao).createAccount(any(), any())
+        verify(accountsDao).createAccount(any(), any(), any())
         assertEquals(Err(expectedException), result)
     }
 
@@ -50,7 +53,8 @@ internal class AccountsServiceTest {
         val to = 2L
         val cash = 100
         //when
-        val result = objectUnderTest.transferFunds(from, to)
+        doReturn(Unit).whenever(accountsDao).runInTransaction<Unit>(any())
+        val result = objectUnderTest.transferFunds(from, to, cash)
         //then
         assertEquals(Ok(Unit), result)
     }
@@ -62,8 +66,10 @@ internal class AccountsServiceTest {
         val to = 2L
         val cash = 100
         val expectedException = RuntimeException()
+        doThrow(expectedException).whenever(accountsDao).runInTransaction<Unit>(any())
+
         //when
-        val result = objectUnderTest.transferFunds(from, to)
+        val result = objectUnderTest.transferFunds(from, to, cash)
         //then
         assertEquals(Err(expectedException), result)
     }

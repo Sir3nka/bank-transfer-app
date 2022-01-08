@@ -5,12 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.michaelbull.result.Err
 import com.github.michaelbull.result.Ok
 import org.http4k.core.Method.POST
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
 import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status.Companion.BAD_REQUEST
 import org.http4k.core.Status.Companion.CREATED
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
@@ -25,9 +25,9 @@ internal class AccountTest {
         //given
         val requestBody = CreateAccountRequest(holder = "Holder", 5)
         //when
-        whenever(accountsService.createAccount(any(), any())).thenReturn(Ok(0))
+        whenever(accountsService.createAccount(any(), any())).thenReturn(Ok(0L))
         //then
-        assertEquals(objectUnderTest.accountsRoute()(Request(POST, "/accounts").body(objectMapper.writeValueAsString(requestBody))), Response(CREATED) )
+        assertEquals(objectUnderTest.accountsRoute()(Request(POST, "/accounts").body(objectMapper.writeValueAsString(requestBody))), Response(CREATED).body("0" ))
     }
 
     @Test
