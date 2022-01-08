@@ -4,7 +4,7 @@ This is a toy project to build simple http server providing basic funds 'transfe
 The goal of this project was to build something using simpliest tools:
 
 - http4k for simple server
-- Hikary connection pool\
+- Hikary connection pool
 - h2 as a db (can be changed but for simplicity it is there)
 - plain jdbc queries for db operations
 
