@@ -9,7 +9,7 @@ The goal of this project was to build something using simpliest tools:
 - plain jdbc queries for db operations
 
 
-There is no Spring neither Hibernate and the result is extremely fast build/run time. Server start on m1 macbook in 1 seconds and the whole builds takes around 8 to 9 seconds.
+There is no Spring neither Hibernate and the result is extremely fast build/run time. Server starts on m1 macbook in 1 seconds and the whole builds takes around 8 to 9 seconds.
 
 Build 
 ```
